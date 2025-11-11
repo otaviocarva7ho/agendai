@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agendai/presentation/pages/initial.dart';
+import 'package:agendai/presentation/pages/calendar.dart';
 
 void main() => runApp(const MeetingApp());
 
@@ -24,6 +25,9 @@ class MeetingApp extends StatelessWidget {
         ),
       ),
       home: const InitialPage(),
+      routes: {
+        '/calendar': (_) => const CalendarPage(),
+      }
       // ou rotas:
       // routes: { InitialPage.route: (_) => const InitialPage(), },
     );
