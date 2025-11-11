@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'confirmation.dart';
+
 
 class CriarReuniaoPage extends StatefulWidget {
   const CriarReuniaoPage({super.key});
@@ -246,8 +248,8 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
                   ),
                   onPressed: () {
                     // aqui você pode salvar/enviar a reunião
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Reunião gerada!')),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const SuccessPage()),
                     );
                   },
                   child: const Text('Gerar reunião'),
