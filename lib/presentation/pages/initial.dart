@@ -379,7 +379,7 @@ class _BottomPill extends StatelessWidget {
                 activeColor: cs.primary,
               ),
               _PillItem(icon: Icons.search, onTap: () {}),
-              _PillItem(icon: Icons.message_outlined, onTap: () {}),
+              _PillItem(icon: Icons.message_outlined, onTap: () {Navigator.pushNamed(context, '/calendar');}),
             ],
           ),
         ),
