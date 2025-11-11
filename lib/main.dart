@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agendai/presentation/pages/initial.dart';
+import 'package:agendai/presentation/pages/chats.dart';
 
 void main() => runApp(const MeetingApp());
 
@@ -24,8 +25,10 @@ class MeetingApp extends StatelessWidget {
         ),
       ),
       home: const InitialPage(),
-      // ou rotas:
-      // routes: { InitialPage.route: (_) => const InitialPage(), },
+      routes: {
+        InitialPage.route: (_) => const InitialPage(),
+        ChatPanelTab.route: (_) => const ChatPanelTab(),
+      },
     );
   }
 }

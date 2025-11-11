@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:agendai/presentation/pages/chats.dart';
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
@@ -15,6 +16,7 @@ class InitialPage extends StatelessWidget {
       child: Scaffold(
         body: Stack(
           children: [
+            // ======= CONTEÚDO (igual ao que você já tinha) =======
             SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
               child: Column(
@@ -24,15 +26,18 @@ class InitialPage extends StatelessWidget {
                   const SizedBox(height: 24),
 
                   // Próxima reunião
-                  Text('Próxima reunião,',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Próxima reunião,',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   _Card(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
+                      horizontal: 16,
+                      vertical: 18,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
@@ -58,19 +63,17 @@ class InitialPage extends StatelessWidget {
                   const SizedBox(height: 28),
 
                   // Acesso rápido
-                  Text('Acesso rápido,',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Acesso rápido,',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: const [
-                      QuickAction(
-                        icon: Icons.add,
-                        label: 'Criar\nreunião',
-                      ),
+                      QuickAction(icon: Icons.add, label: 'Criar\nreunião'),
                       QuickAction(
                         icon: Icons.cancel_outlined,
                         label: 'Cancelar\nreunião',
@@ -83,10 +86,7 @@ class InitialPage extends StatelessWidget {
                         icon: Icons.people_outline,
                         label: 'Histórico de\nreuniões',
                       ),
-                      QuickAction(
-                        icon: Icons.help_outline,
-                        label: 'Ajuda',
-                      ),
+                      QuickAction(icon: Icons.help_outline, label: 'Ajuda'),
                     ],
                   ),
                   const SizedBox(height: 24),
@@ -120,9 +120,7 @@ class InitialPage extends StatelessWidget {
                         const SizedBox(height: 14),
                         Text(
                           'Resumo de informações do dia.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.w700),
                         ),
                         const SizedBox(height: 8),
@@ -136,11 +134,12 @@ class InitialPage extends StatelessWidget {
                         const SizedBox(height: 14),
                         Opacity(
                           opacity: .9,
-                          child: Text('Reuniões',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(letterSpacing: .2)),
+                          child: Text(
+                            'Reuniões',
+                            style: Theme.of(
+                              context,
+                            ).textTheme.labelLarge?.copyWith(letterSpacing: .2),
+                          ),
                         ),
                         const SizedBox(height: 8),
                         const _Bullet('Reunião com João às 17h.'),
@@ -154,15 +153,15 @@ class InitialPage extends StatelessWidget {
                   // Agendamento com IA
                   _Card(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 22),
+                      horizontal: 16,
+                      vertical: 22,
+                    ),
                     child: Row(
                       children: [
                         Expanded(
                           child: Text(
                             'Agendamento inteligente com IA.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
+                            style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                         ),
@@ -170,11 +169,14 @@ class InitialPage extends StatelessWidget {
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: Colors.white.withOpacity(.14)),
+                              color: Colors.white.withOpacity(.14),
+                            ),
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child:
-                              const Icon(Icons.chat_bubble_outline, size: 22),
+                          child: const Icon(
+                            Icons.chat_bubble_outline,
+                            size: 22,
+                          ),
                         ),
                       ],
                     ),
@@ -183,8 +185,19 @@ class InitialPage extends StatelessWidget {
               ),
             ),
 
-            // Bottom pill nav
-            const _BottomPill(),
+            // ======= NAVBAR (aba 0 ativa) =======
+            _BottomPill(
+              activeIndex: 0,
+              onTapIndex: (i) {
+                if (i == 1) {
+                  Navigator.of(
+                    context,
+                  ).pushReplacementNamed(ChatPanelTab.route);
+                }
+                // i == 0: já estamos na inicial
+                // i == 2: quando criar a tela de calendário, navegue aqui
+              },
+            ),
           ],
         ),
       ),
@@ -215,21 +228,19 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text('Olá, João',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Olá, João',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
           ),
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.notifications_outlined),
           ),
           const SizedBox(width: 4),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu_rounded),
-          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.menu_rounded)),
         ],
       ),
     );
@@ -259,7 +270,7 @@ class QuickAction extends StatelessWidget {
                 color: Colors.black.withOpacity(.35),
                 blurRadius: 12,
                 offset: const Offset(0, 6),
-              )
+              ),
             ],
           ),
           child: Icon(icon, color: cs.primary),
@@ -276,7 +287,7 @@ class QuickAction extends StatelessWidget {
               color: Colors.white.withOpacity(.75),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -330,11 +341,32 @@ class _Bullet extends StatelessWidget {
 }
 
 class _BottomPill extends StatelessWidget {
-  const _BottomPill();
+  final int activeIndex; // 0=inicial, 1=chat, 2=calendário
+  final ValueChanged<int> onTapIndex;
+  const _BottomPill({required this.activeIndex, required this.onTapIndex});
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    Widget item(IconData icon, int i) {
+      final active = activeIndex == i;
+      final color = active ? cs.primary : Colors.white70;
+      return InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: () => onTapIndex(i),
+        child: Container(
+          width: 64,
+          height: 44,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: active ? color.withOpacity(.14) : Colors.transparent,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: Icon(icon, color: color),
+        ),
+      );
+    }
 
     return Positioned(
       left: 0,
@@ -351,52 +383,12 @@ class _BottomPill extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _PillItem(
-                icon: Icons.person_outline,
-                active: true,
-                onTap: () {},
-                activeColor: cs.primary,
-              ),
-              _PillItem(icon: Icons.search, onTap: () {}),
-              _PillItem(icon: Icons.message_outlined, onTap: () {}),
+              item(Icons.home_outlined, 0),
+              item(Icons.search, 1),
+              item(Icons.calendar_month_outlined, 2),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _PillItem extends StatelessWidget {
-  final IconData icon;
-  final bool active;
-  final VoidCallback onTap;
-  final Color? activeColor;
-
-  const _PillItem({
-    required this.icon,
-    this.active = false,
-    required this.onTap,
-    this.activeColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final color =
-        active ? (activeColor ?? Theme.of(context).colorScheme.primary) : null;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: onTap,
-      child: Container(
-        width: 64,
-        height: 44,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: active ? color!.withOpacity(.14) : Colors.transparent,
-          borderRadius: BorderRadius.circular(22),
-        ),
-        child: Icon(icon, color: active ? color : Colors.white70),
       ),
     );
   }
