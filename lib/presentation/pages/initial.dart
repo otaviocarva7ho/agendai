@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'meeting.dart';
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
@@ -66,24 +67,33 @@ class InitialPage extends StatelessWidget {
                   const SizedBox(height: 18),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       QuickAction(
                         icon: Icons.add,
                         label: 'Criar\nreunião',
+                        // navegação para a tela de criar reunião
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const CriarReuniaoPage(),
+                            ),
+                          );
+                          // ou: Navigator.of(context).pushNamed(CriarReuniaoPage.route);
+                        },
                       ),
-                      QuickAction(
+                      const QuickAction(
                         icon: Icons.cancel_outlined,
                         label: 'Cancelar\nreunião',
                       ),
-                      QuickAction(
+                      const QuickAction(
                         icon: Icons.link,
                         label: 'Inserir código\nde reunião',
                       ),
-                      QuickAction(
+                      const QuickAction(
                         icon: Icons.people_outline,
                         label: 'Histórico de\nreuniões',
                       ),
-                      QuickAction(
+                      const QuickAction(
                         icon: Icons.help_outline,
                         label: 'Ajuda',
                       ),
@@ -239,45 +249,56 @@ class _Header extends StatelessWidget {
 class QuickAction extends StatelessWidget {
   final IconData icon;
   final String label;
-  const QuickAction({super.key, required this.icon, required this.label});
+  final VoidCallback? onTap; // <- adicionado
+
+  const QuickAction({
+    super.key,
+    required this.icon,
+    required this.label,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    return Column(
-      children: [
-        Container(
-          width: 58,
-          height: 58,
-          decoration: BoxDecoration(
-            color: const Color(0xFF0E1623),
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(color: Colors.white.withOpacity(.08)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.35),
-                blurRadius: 12,
-                offset: const Offset(0, 6),
-              )
-            ],
-          ),
-          child: Icon(icon, color: cs.primary),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: 74,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              height: 1.2,
-              fontSize: 11.5,
-              color: Colors.white.withOpacity(.75),
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Column(
+        children: [
+          Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              color: const Color(0xFF0E1623),
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.white.withOpacity(.08)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                )
+              ],
             ),
+            child: Icon(icon, color: cs.primary),
           ),
-        )
-      ],
+          const SizedBox(height: 10),
+          SizedBox(
+            width: 74,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                height: 1.2,
+                fontSize: 11.5,
+                color: Colors.white.withOpacity(.75),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
