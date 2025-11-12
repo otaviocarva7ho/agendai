@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'meeting.dart';
+import 'history.dart';
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
@@ -129,16 +130,18 @@ class _InitialPageState extends State<InitialPage>
                           },
                         ),
                         const QuickAction(
-                          icon: Icons.cancel_outlined,
-                          label: 'Cancelar\nreunião',
-                        ),
-                        const QuickAction(
                           icon: Icons.link,
                           label: 'Inserir código\nde reunião',
                         ),
-                        const QuickAction(
+                        QuickAction(
                           icon: Icons.people_outline,
                           label: 'Histórico de\nreuniões',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => const HistoricoReunioesPage()),
+                              );
+                            },
                         ),
                         const QuickAction(
                           icon: Icons.help_outline,
