@@ -3,10 +3,54 @@ import 'meeting.dart';
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
-class InitialPage extends StatelessWidget {
+class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
 
   static const route = '/initial';
+
+  @override
+  State<InitialPage> createState() => _InitialPageState();
+}
+
+class _InitialPageState extends State<InitialPage>
+    with SingleTickerProviderStateMixin {
+  bool _menuOpen = false;
+  late final AnimationController _menuCtrl;
+  late final Animation<double> _fade;
+
+  @override
+  void initState() {
+    super.initState();
+    _menuCtrl =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 220));
+    _fade = CurvedAnimation(parent: _menuCtrl, curve: Curves.easeOut);
+  }
+
+  void _toggleMenu() {
+    setState(() {
+      _menuOpen = !_menuOpen;
+      if (_menuOpen) {
+        _menuCtrl.forward();
+      } else {
+        _menuCtrl.reverse();
+      }
+    });
+  }
+
+  void _closeMenu() {
+    if (_menuOpen) {
+      setState(() {
+        _menuOpen = false;
+        _menuCtrl.reverse();
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _menuCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,180 +60,211 @@ class InitialPage extends StatelessWidget {
       child: Scaffold(
         body: Stack(
           children: [
-            SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const _Header(),
-                  const SizedBox(height: 24),
+            // --- Conteúdo principal ---
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: _closeMenu, // toca fora -> fecha
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _Header(onMenuTap: _toggleMenu),
+                    const SizedBox(height: 24),
 
-                  // Próxima reunião
-                  Text('Próxima reunião,',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 12),
-                  _Card(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 18),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Reunião com (nome).',
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(.88),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          '23/08, 17h.',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(.6),
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // Acesso rápido
-                  Text('Acesso rápido,',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w600)),
-                  const SizedBox(height: 18),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      QuickAction(
-                        icon: Icons.add,
-                        label: 'Criar\nreunião',
-                        // navegação para a tela de criar reunião
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const CriarReuniaoPage(),
-                            ),
-                          );
-                          // ou: Navigator.of(context).pushNamed(CriarReuniaoPage.route);
-                        },
-                      ),
-                      const QuickAction(
-                        icon: Icons.cancel_outlined,
-                        label: 'Cancelar\nreunião',
-                      ),
-                      const QuickAction(
-                        icon: Icons.link,
-                        label: 'Inserir código\nde reunião',
-                      ),
-                      const QuickAction(
-                        icon: Icons.people_outline,
-                        label: 'Histórico de\nreuniões',
-                      ),
-                      const QuickAction(
-                        icon: Icons.help_outline,
-                        label: 'Ajuda',
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Resumo do dia
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              width: 26,
-                              height: 26,
-                              decoration: BoxDecoration(
-                                color: cs.primary.withOpacity(.18),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.bolt, size: 16),
-                            ),
-                            const Spacer(),
-                            Text(
-                              '23/08/2025',
+                    // Próxima reunião
+                    Text('Próxima reunião,',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 12),
+                    _Card(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Reunião com (nome).',
                               style: TextStyle(
-                                color: Colors.white.withOpacity(.6),
-                                fontSize: 12,
+                                color: Colors.white.withOpacity(.88),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Text(
-                          'Resumo de informações do dia.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
-                              ?.copyWith(fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(height: 8),
-                        Opacity(
-                          opacity: .75,
-                          child: Text(
-                            '• Hoje, você possui 3 reuniões e é aniversário do João',
-                            style: const TextStyle(fontSize: 13),
                           ),
+                          Text(
+                            '23/08, 17h.',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(.6),
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+
+                    // Acesso rápido
+                    Text('Acesso rápido,',
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    const SizedBox(height: 18),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        QuickAction(
+                          icon: Icons.add,
+                          label: 'Criar\nreunião',
+                          // navegação para a tela de criar reunião
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const CriarReuniaoPage(),
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 14),
-                        Opacity(
-                          opacity: .9,
-                          child: Text('Reuniões',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
-                                  ?.copyWith(letterSpacing: .2)),
+                        const QuickAction(
+                          icon: Icons.cancel_outlined,
+                          label: 'Cancelar\nreunião',
                         ),
-                        const SizedBox(height: 8),
-                        const _Bullet('Reunião com João às 17h.'),
-                        const _Bullet('Reunião com Ana às 18h.'),
-                        const _Bullet('Reunião com José às 19h.'),
+                        const QuickAction(
+                          icon: Icons.link,
+                          label: 'Inserir código\nde reunião',
+                        ),
+                        const QuickAction(
+                          icon: Icons.people_outline,
+                          label: 'Histórico de\nreuniões',
+                        ),
+                        const QuickAction(
+                          icon: Icons.help_outline,
+                          label: 'Ajuda',
+                        ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 18),
+                    const SizedBox(height: 24),
 
-                  // Agendamento com IA
-                  _Card(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 22),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Agendamento inteligente com IA.',
+                    // Resumo do dia
+                    _Card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 26,
+                                height: 26,
+                                decoration: BoxDecoration(
+                                  color: cs.primary.withOpacity(.18),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.bolt, size: 16),
+                              ),
+                              const Spacer(),
+                              Text(
+                                '23/08/2025',
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(.6),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 14),
+                          Text(
+                            'Resumo de informações do dia.',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.white.withOpacity(.14)),
-                            borderRadius: BorderRadius.circular(10),
+                          const SizedBox(height: 8),
+                          Opacity(
+                            opacity: .75,
+                            child: Text(
+                              '• Hoje, você possui 3 reuniões e é aniversário do João',
+                              style: const TextStyle(fontSize: 13),
+                            ),
                           ),
-                          child:
-                              const Icon(Icons.chat_bubble_outline, size: 22),
-                        ),
-                      ],
+                          const SizedBox(height: 14),
+                          Opacity(
+                            opacity: .9,
+                            child: Text('Reuniões',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.copyWith(letterSpacing: .2)),
+                          ),
+                          const SizedBox(height: 8),
+                          const _Bullet('Reunião com João às 17h.'),
+                          const _Bullet('Reunião com Ana às 18h.'),
+                          const _Bullet('Reunião com José às 19h.'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+
+                    // Agendamento com IA
+                    _Card(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Agendamento inteligente com IA.',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              border:
+                                  Border.all(color: Colors.white.withOpacity(.14)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(Icons.chat_bubble_outline, size: 22),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // --- Scrim (fundo) para capturar toque fora e escurecer ---
+            if (_menuOpen) ...[
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: _closeMenu,
+                  child: AnimatedBuilder(
+                    animation: _fade,
+                    builder: (_, __) => Container(
+                      color: Colors.black.withOpacity(0.35 * _fade.value),
                     ),
                   ),
-                ],
+                ),
+              ),
+            ],
+
+            // --- Menu suspenso (tipo dropdown da 2ª tela) ---
+            Positioned(
+              top: 86,
+              right: 16,
+              child: FadeTransition(
+                opacity: _fade,
+                child: IgnorePointer(
+                  ignoring: !_menuOpen,
+                  child: _AccountMenu(onClose: _closeMenu),
+                ),
               ),
             ),
 
@@ -202,8 +277,10 @@ class InitialPage extends StatelessWidget {
   }
 }
 
+/// Header com botão de menu; ação vem de cima para abrir/fechar.
 class _Header extends StatelessWidget {
-  const _Header();
+  const _Header({required this.onMenuTap});
+  final VoidCallback onMenuTap;
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +314,7 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(width: 4),
           IconButton(
-            onPressed: () {},
+            onPressed: onMenuTap,
             icon: const Icon(Icons.menu_rounded),
           ),
         ],
@@ -246,10 +323,231 @@ class _Header extends StatelessWidget {
   }
 }
 
+/* ====================== MENU COM NOTIFICAÇÕES EXPANSÍVEIS ===================== */
+
+class _AccountMenu extends StatefulWidget {
+  const _AccountMenu({required this.onClose});
+  final VoidCallback onClose;
+
+  @override
+  State<_AccountMenu> createState() => _AccountMenuState();
+}
+
+class _AccountMenuState extends State<_AccountMenu> with TickerProviderStateMixin {
+  bool _showNotifications = false;
+
+  // Lista de notificações (mock). Substitua pelos seus dados quando tiver backend/estado.
+  final List<String> _notifications = [
+    'João ingressou na reunião X',
+    'Maria ingressou na reunião X',
+  ];
+
+  int get _unreadCount => _notifications.length;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 300,
+      decoration: BoxDecoration(
+        color: const Color(0xFF1F2937),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(color: Colors.white.withOpacity(.10)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.45),
+            blurRadius: 18,
+            offset: const Offset(0, 10),
+          )
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ListTile(
+            contentPadding: EdgeInsets.symmetric(horizontal: 6),
+            dense: true,
+            leading: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.transparent,
+              child: Icon(Icons.emoji_people, color: Colors.white),
+            ),
+            title: Text('Olá, João',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+            trailing: Icon(Icons.expand_less, color: Colors.white70),
+          ),
+
+          // Configurações
+          _PillRowButton(
+            icon: Icons.settings,
+            label: 'Configurações',
+            trailing: const Icon(Icons.settings, color: Colors.white),
+            onTap: widget.onClose,
+          ),
+          const SizedBox(height: 10),
+
+          // Notificações (expansível)
+          _PillRowButton(
+            icon: Icons.notifications_none,
+            label: 'Notificações',
+            trailing: _unreadCount > 0 ? _Badge(number: _unreadCount) : null,
+            onTap: () {
+              setState(() => _showNotifications = !_showNotifications);
+            },
+          ),
+
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            curve: Curves.easeOut,
+            alignment: Alignment.topCenter,
+            child: !_showNotifications
+                ? const SizedBox.shrink()
+                : Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      children: [
+                        for (final msg in _notifications)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: _NotifBubble(text: msg),
+                          ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _notifications.clear();
+                                _showNotifications = false;
+                              });
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text(
+                              'Excluir notificações',
+                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+          ),
+
+          const SizedBox(height: 10),
+
+          // Abrir uma conta Empresa
+          _PillRowButton(
+            icon: Icons.add,
+            label: 'Abrir uma conta Empresa',
+            onTap: widget.onClose,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Botão "pílula" usado nas linhas do menu
+class _PillRowButton extends StatelessWidget {
+  const _PillRowButton({
+    required this.icon,
+    required this.label,
+    this.trailing,
+    this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF111827),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          children: [
+            Icon(icon, color: Colors.white70),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            if (trailing != null) trailing!,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Item de notificação (bolha arredondada)
+class _NotifBubble extends StatelessWidget {
+  const _NotifBubble({required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0E1623),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Text(
+        text,
+        style: const TextStyle(color: Colors.white, fontSize: 13.5),
+      ),
+    );
+  }
+}
+
+/// Badge vermelho com número
+class _Badge extends StatelessWidget {
+  const _Badge({required this.number});
+  final int number;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+      decoration: BoxDecoration(
+        color: Colors.redAccent,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        number.toString(),
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+}
+
+/* ====================== RESTANTE DOS SEUS WIDGETS ===================== */
+
 class QuickAction extends StatelessWidget {
   final IconData icon;
   final String label;
-  final VoidCallback? onTap; // <- adicionado
+  final VoidCallback? onTap;
 
   const QuickAction({
     super.key,
@@ -379,7 +677,11 @@ class _BottomPill extends StatelessWidget {
                 activeColor: cs.primary,
               ),
               _PillItem(icon: Icons.search, onTap: () {}),
-              _PillItem(icon: Icons.message_outlined, onTap: () {Navigator.pushNamed(context, '/calendar');}),
+              _PillItem(
+                  icon: Icons.message_outlined,
+                  onTap: () {
+                    Navigator.pushNamed(context, '/calendar');
+                  }),
             ],
           ),
         ),
