@@ -157,7 +157,6 @@ class _HeroHeader extends StatelessWidget {
   final VoidCallback onToggleExpanded;
 
   const _HeroHeader({
-    super.key,
     required this.controller,
     required this.onChanged,
     required this.expanded,
@@ -295,7 +294,7 @@ class _HeroHeader extends StatelessWidget {
 class _Frosted extends StatelessWidget {
   final Widget child;
   final double radius;
-  const _Frosted({required this.child, this.radius = 16, super.key});
+  const _Frosted({required this.child, this.radius = 16,});
 
   @override
   Widget build(BuildContext context) {
@@ -341,7 +340,6 @@ class _MeetingTile extends StatelessWidget {
   final VoidCallback? onTap;
 
   const _MeetingTile({
-    super.key,
     required this.name,
     required this.subtitle,
     this.dayLabel,

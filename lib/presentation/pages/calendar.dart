@@ -32,7 +32,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
 
     final compromissosAll = _fakeCompromissos(selecionado ?? mesBase);
     final compromissos = compromissosAll
@@ -51,7 +50,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(
-                        child: _Header(onBell: () {}, onMenu: () {}),
+                        // menu removido
+                        child: _Header(onBell: () {}),
                       ),
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
@@ -93,8 +93,7 @@ class _CalendarPageState extends State<CalendarPage> {
                                       });
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
-                                          content:
-                                              Text('Reunião cancelada!'),
+                                          content: Text('Reunião cancelada!'),
                                         ),
                                       );
                                     },
@@ -219,8 +218,7 @@ String _formataCurto(DateTime d) {
 
 class _Header extends StatelessWidget {
   final VoidCallback onBell;
-  final VoidCallback onMenu;
-  const _Header({required this.onBell, required this.onMenu});
+  const _Header({required this.onBell});
 
   @override
   Widget build(BuildContext context) {
@@ -271,20 +269,14 @@ class _Header extends StatelessWidget {
             ),
             const SizedBox(width: 8),
 
-            // Sino
+            // Sino (mantido)
             _HeaderIconChip(
               icon: Icons.notifications_none_rounded,
               onTap: onBell,
             ),
-            const SizedBox(width: 8),
-
-            // Menu (apenas um)
-            _HeaderIconChip(
-              icon: Icons.menu_rounded,
-              onTap: onMenu,
-            ),
+            // 👉 botão de menu removido
           ],
-        )
+        ),
       ),
     );
   }
@@ -323,7 +315,6 @@ class _HeaderIconChip extends StatelessWidget {
     );
   }
 }
-
 
 class _MesTitulo extends StatelessWidget {
   final DateTime data;
@@ -726,41 +717,4 @@ class _DockFlutuante extends StatelessWidget {
 }
 
 // (Opcional) Mantido caso você use em outro lugar; pode remover se estiver ocioso.
-class _MiniButton extends StatelessWidget {
-  final IconData icon;
-  final bool filled;
-  final VoidCallback? onTap;
 
-  const _MiniButton({required this.icon, this.filled = false, this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    final child = Container(
-      width: 44,
-      height: 44,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: filled ? cs.primary : Colors.transparent,
-        borderRadius: BorderRadius.circular(22),
-        border: filled ? null : Border.all(color: cs.outline),
-      ),
-      child: Icon(
-        icon,
-        size: 22,
-        color: filled ? cs.onPrimary : cs.onSurface.withOpacity(.7),
-      ),
-    );
-
-    if (onTap == null) return child;
-
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: child,
-      ),
-    );
-  }
-}
