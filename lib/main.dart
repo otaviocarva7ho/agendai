@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:agendai/presentation/pages/initial.dart';
+import 'package:agendai/presentation/pages/calendar.dart';
+import 'package:agendai/presentation/pages/login.dart';
 import 'package:agendai/presentation/pages/chats.dart';
 
 void main() => runApp(const MeetingApp());
@@ -24,10 +26,16 @@ class MeetingApp extends StatelessWidget {
           secondary: const Color(0xFF4C8DFF),
         ),
       ),
-      home: const InitialPage(),
+
+      // 👇 Tela inicial definida como Login
+      home: const LoginPage(),
+
+      // Rotas disponíveis
       routes: {
-        InitialPage.route: (_) => const InitialPage(),
-        ChatPanelTab.route: (_) => const ChatPanelTab(),
+        '/initial': (_) => const InitialPage(),
+        '/calendar': (_) => const CalendarPage(),
+        '/login': (_) => const LoginPage(),
+        '/chats': (_) => const ChatPanelTab(),
       },
     );
   }
