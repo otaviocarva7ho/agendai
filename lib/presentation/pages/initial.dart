@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'meeting.dart';
 import 'history.dart';
-import 'help.dart'; // ajuste o caminho se for diferente
-import 'insert_code.dart'; // ou o caminho correto
+import 'help.dart'; 
+import 'insert_code.dart'; 
+import 'chats.dart'; 
+import 'register.dart';
 
 
 /// Página inicial da Agenda.
@@ -202,7 +204,7 @@ class _InitialPageState extends State<InitialPage>
                                   color: cs.primary.withOpacity(.18),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.directions_walk_outlined, size: 22),
+                                child: const Icon(Icons.directions_walk_outlined, size: 24),
                               ),
                               const Spacer(),
                               Text(
@@ -246,7 +248,15 @@ class _InitialPageState extends State<InitialPage>
                     const SizedBox(height: 18),
 
                     // Agendamento com IA
-                    _Card(
+                    InkWell(
+                      borderRadius: BorderRadius.circular(16), // mesmo raio do _Card
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const ChatPanelTab()), // substitua pelo nome da sua página
+                          );
+                          },
+                    child: _Card(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 22,
@@ -276,10 +286,11 @@ class _InitialPageState extends State<InitialPage>
                         ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+           ),
 
             // --- Scrim (fundo) para capturar toque fora e escurecer ---
             if (_menuOpen) ...[
@@ -326,6 +337,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+    final int unread = 2;
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
@@ -350,9 +362,20 @@ class _Header extends StatelessWidget {
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
-          IconButton(
-            onPressed: onMenuTap,
-            icon: const Icon(Icons.notifications_outlined),
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              IconButton(
+                onPressed: onMenuTap,
+                icon: const Icon(Icons.notifications_outlined),
+                ),
+                if (unread > 0)
+                Positioned(
+                  right: 6,
+                  top: 6,
+                  child: _Badge(number: unread), // reutiliza seu badge já definido
+                ),
+            ],
           ),
         ],
       ),
@@ -489,7 +512,13 @@ class _AccountMenuState extends State<_AccountMenu>
           _PillRowButton(
             icon: Icons.add,
             label: 'Abrir uma conta Empresa',
-            onTap: widget.onClose,
+            onTap: () {
+              widget.onClose(); // fecha o menu primeiro
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CadastroPage()),
+              );
+            },
           ),
         ],
       ),
