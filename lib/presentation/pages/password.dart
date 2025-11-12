@@ -178,7 +178,7 @@ class _FormContent extends StatelessWidget {
 
         const SizedBox(height: 18),
 
-        // Label do campo
+        // Label do campo novo
         Text(
           modo == 0
               ? 'Insira o telefone vinculado à sua conta.'
