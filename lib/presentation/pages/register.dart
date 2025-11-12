@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'confirm_access.dart';
 
 enum AccountType { cliente, empresa }
 
@@ -102,7 +103,12 @@ class _CadastroPageState extends State<CadastroPage> {
     );
 
     // volta para o login
-    Navigator.pop(context);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ConfirmarAcessoPage(email: _emailCtrl.text),
+      ),
+    );
   }
 
   @override
