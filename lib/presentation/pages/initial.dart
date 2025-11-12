@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'meeting.dart';
 import 'history.dart';
+import 'help.dart'; // ajuste o caminho se for diferente
+
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
@@ -143,9 +145,13 @@ class _InitialPageState extends State<InitialPage>
                               );
                             },
                         ),
-                        const QuickAction(
+                        QuickAction(
                           icon: Icons.help_outline,
                           label: 'Ajuda',
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const HelpPage()));
+                          },
                         ),
                       ],
                     ),
