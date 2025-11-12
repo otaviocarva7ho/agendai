@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'meeting.dart';
 import 'history.dart';
 import 'help.dart'; // ajuste o caminho se for diferente
+import 'insert_code.dart'; // ou o caminho correto
+
 
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
@@ -136,9 +138,27 @@ class _InitialPageState extends State<InitialPage>
                             );
                           },
                         ),
-                        const QuickAction(
+                        QuickAction(
                           icon: Icons.link,
                           label: 'Inserir código\nde reunião',
+                          onTap: () async {
+                            final code = await Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const InserirCodigoPage()),
+                            );
+
+                            // Opcional: use o código retornado
+                            if (code is String && code.isNotEmpty) {
+                              // Exemplo: mostrar um feedback ou navegar para a sala
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Código recebido: $code')),
+                              );
+
+                              // TODO: navegue para a sala de reunião correspondente, se já tiver essa tela.
+                              // Navigator.push(context, MaterialPageRoute(
+                              //   builder: (_) => MeetingRoomPage(code: code),
+                              // ));
+                            }
+                          },
                         ),
                         QuickAction(
                           icon: Icons.people_outline,
