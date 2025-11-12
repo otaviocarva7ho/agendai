@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -35,10 +36,8 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     );
 
     _fadeIn = CurvedAnimation(parent: _contentCtrl, curve: Curves.easeOutCubic);
-    _slideUp = Tween(
-      begin: const Offset(0, .06),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(parent: _contentCtrl, curve: Curves.easeOut));
+    _slideUp = Tween(begin: const Offset(0, .06), end: Offset.zero)
+        .animate(CurvedAnimation(parent: _contentCtrl, curve: Curves.easeOut));
 
     Future.microtask(() async {
       await Future<void>.delayed(const Duration(milliseconds: 150));
@@ -88,9 +87,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       Navigator.of(context).pushReplacementNamed('/initial');
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao entrar: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Erro ao entrar: $e')),
+      );
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -129,9 +128,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                       AnimatedBuilder(
                         animation: _heroCtrl,
                         builder: (context, _) {
-                          final t = Curves.easeOutBack.transform(
-                            _heroCtrl.value,
-                          );
+                          final t = Curves.easeOutBack.transform(_heroCtrl.value);
                           return Opacity(
                             opacity: t.clamp(0, 1),
                             child: Transform.scale(
@@ -145,19 +142,11 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       color: cs.primary.withOpacity(.12),
                                       borderRadius: BorderRadius.circular(18),
                                     ),
-                                    child: Icon(
-                                      Icons.lock_rounded,
-                                      color: cs.primary,
-                                      size: 36,
-                                    ),
+                                    child: Icon(Icons.lock_rounded, color: cs.primary, size: 36),
                                   ),
                                   const SizedBox(height: 16),
-                                  Text(
-                                    'Bem-vindo de volta',
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge,
-                                  ),
+                                  Text('Bem-vindo de volta',
+                                      style: Theme.of(context).textTheme.titleLarge),
                                   const SizedBox(height: 6),
                                   Text(
                                     'Entre para continuar',
@@ -182,9 +171,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             elevation: 0,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
-                              side: BorderSide(
-                                color: cs.outlineVariant.withOpacity(.3),
-                              ),
+                              side: BorderSide(color: cs.outlineVariant.withOpacity(.3)),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(18),
@@ -207,18 +194,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       obscureText: _obscure,
                                       decoration: InputDecoration(
                                         labelText: 'Senha',
-                                        prefixIcon: const Icon(
-                                          Icons.lock_outline,
-                                        ),
+                                        prefixIcon: const Icon(Icons.lock_outline),
                                         suffixIcon: IconButton(
-                                          onPressed: () => setState(
-                                            () => _obscure = !_obscure,
-                                          ),
-                                          icon: Icon(
-                                            _obscure
-                                                ? Icons.visibility_outlined
-                                                : Icons.visibility_off_outlined,
-                                          ),
+                                          onPressed: () =>
+                                              setState(() => _obscure = !_obscure),
+                                          icon: Icon(_obscure
+                                              ? Icons.visibility_outlined
+                                              : Icons.visibility_off_outlined),
                                         ),
                                       ),
                                       validator: _validatePass,
@@ -228,26 +210,17 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       alignment: Alignment.centerRight,
                                       child: TextButton(
                                         onPressed: () {
-                                          ScaffoldMessenger.of(
+                                          Navigator.push(
                                             context,
-                                          ).showSnackBar(
-                                            const SnackBar(
-                                              content: Text(
-                                                'Recuperação de senha em breve.',
-                                              ),
-                                            ),
+                                            MaterialPageRoute(builder: (_) => const EsqueciSenhaPage()),
                                           );
                                         },
-                                        child: const Text(
-                                          'Esqueci minha senha',
+                                            child: const Text('Esqueci minha senha'),
+                                          ),
                                         ),
-                                      ),
-                                    ),
                                     const SizedBox(height: 6),
                                     AnimatedSwitcher(
-                                      duration: const Duration(
-                                        milliseconds: 250,
-                                      ),
+                                      duration: const Duration(milliseconds: 250),
                                       child: _isLoading
                                           ? ElevatedButton.icon(
                                               key: const ValueKey('loading'),
@@ -255,10 +228,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                               icon: const SizedBox(
                                                 width: 20,
                                                 height: 20,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                      strokeWidth: 2,
-                                                    ),
+                                                child: CircularProgressIndicator(strokeWidth: 2),
                                               ),
                                               label: const Text('Entrando...'),
                                             )
@@ -283,18 +253,13 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                'Não tem conta?',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
+                              Text('Não tem conta?',
+                                  style: Theme.of(context).textTheme.bodyMedium),
                               TextButton(
                                 onPressed: () {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text(
-                                        'Tela de cadastro em breve.',
-                                      ),
-                                    ),
+                                        content: Text('Tela de cadastro em breve.')),
                                   );
                                 },
                                 child: const Text('Criar conta'),

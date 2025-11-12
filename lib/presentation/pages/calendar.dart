@@ -93,11 +93,10 @@ class _CalendarPageState extends State<CalendarPage> {
                                       setState(() {
                                         _cancelados.add(_idReuniao(r));
                                       });
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
+                                      ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
-                                          content: Text('Reunião cancelada!'),
+                                          content:
+                                              Text('Reunião cancelada!'),
                                         ),
                                       );
                                     },
@@ -281,6 +280,13 @@ class _Header extends StatelessWidget {
             const SizedBox(width: 8),
 
             // Botão menu (chip)
+            _HeaderIconChip(
+              icon: Icons.menu_rounded,
+              onTap: onMenu,
+            ),
+            const SizedBox(width: 8),
+
+            // Botão menu (chip)
             _HeaderIconChip(icon: Icons.menu_rounded, onTap: onMenu),
           ],
         ),
@@ -323,6 +329,7 @@ class _HeaderIconChip extends StatelessWidget {
   }
 }
 
+
 class _MesTitulo extends StatelessWidget {
   final DateTime data;
   final VoidCallback onPrev; // NOVO
@@ -334,18 +341,8 @@ class _MesTitulo extends StatelessWidget {
   });
 
   static const _meses = [
-    'Janeiro',
-    'Fevereiro',
-    'Março',
-    'Abril',
-    'Maio',
-    'Junho',
-    'Julho',
-    'Agosto',
-    'Setembro',
-    'Outubro',
-    'Novembro',
-    'Dezembro',
+    'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+    'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
   ];
 
   @override
@@ -554,7 +551,10 @@ class _ReuniaoCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: const Padding(
                         padding: EdgeInsets.all(4.0),
-                        child: Icon(Icons.close_rounded, size: 20),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 20,
+                        ),
                       ),
                     ),
                   ],

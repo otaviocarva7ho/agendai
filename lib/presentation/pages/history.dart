@@ -30,7 +30,9 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
     } else {
       setState(() {
         _historicoFiltrado = _historicoOriginal.where((r) {
-          return r.participantes.any((p) => p.toLowerCase().contains(query));
+          return r.participantes.any(
+            (p) => p.toLowerCase().contains(query),
+          );
         }).toList();
       });
     }
@@ -67,10 +69,8 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                     const SliverPadding(padding: EdgeInsets.only(top: 8)),
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 8,
-                        ),
+                        padding:
+                            const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -86,10 +86,8 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                               borderRadius: BorderRadius.circular(14),
                               borderSide: BorderSide(color: cs.outlineVariant),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 0,
-                              horizontal: 8,
-                            ),
+                            contentPadding:
+                                const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                           ),
                         ),
                       ),
@@ -97,7 +95,9 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       sliver: _historicoFiltrado.isEmpty
-                          ? SliverToBoxAdapter(child: _VazioCardHistorico())
+                          ? SliverToBoxAdapter(
+                              child: _VazioCardHistorico(),
+                            )
                           : SliverList.separated(
                               itemCount: _historicoFiltrado.length,
                               separatorBuilder: (_, __) =>
@@ -144,14 +144,7 @@ List<ReuniaoHistorico> _geraHistoricoUltimos6Meses() {
   final inicioJanela = DateTime(agora.year, agora.month - 6, 1);
   final rnd = math.Random(12345);
   final nomesPool = [
-    'Você',
-    'João',
-    'Maria',
-    'Ana',
-    'Ruan',
-    'Carlos',
-    'Beatriz',
-    'Luís',
+    'Você', 'João', 'Maria', 'Ana', 'Ruan', 'Carlos', 'Beatriz', 'Luís'
   ];
   final temas = [
     'Daily stand-up',
@@ -188,24 +181,19 @@ List<ReuniaoHistorico> _geraHistoricoUltimos6Meses() {
     }
     final titulo = temas[rnd.nextInt(temas.length)];
     final id = _geraId(inicio, i);
-    list.add(
-      ReuniaoHistorico(
-        id: id,
-        titulo: titulo,
-        inicio: inicio,
-        duracao: duracao,
-        participantes: participantes.toList(),
-      ),
-    );
+    list.add(ReuniaoHistorico(
+      id: id,
+      titulo: titulo,
+      inicio: inicio,
+      duracao: duracao,
+      participantes: participantes.toList(),
+    ));
   }
 
-  final filtrado =
-      list
-          .where(
-            (r) => r.inicio.isAfter(inicioJanela) && r.inicio.isBefore(agora),
-          )
-          .toList()
-        ..sort((a, b) => b.inicio.compareTo(a.inicio));
+  final filtrado = list
+      .where((r) => r.inicio.isAfter(inicioJanela) && r.inicio.isBefore(agora))
+      .toList()
+    ..sort((a, b) => b.inicio.compareTo(a.inicio));
 
   return filtrado;
 }
@@ -262,7 +250,8 @@ class _HistoricoCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: cs.surface,
                   border: Border.all(color: cs.outlineVariant),
@@ -281,32 +270,22 @@ class _HistoricoCard extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              Icon(
-                Icons.event_available_rounded,
-                size: 18,
-                color: cs.onSurface.withOpacity(.75),
-              ),
+              Icon(Icons.event_available_rounded,
+                  size: 18, color: cs.onSurface.withOpacity(.75)),
               const SizedBox(width: 6),
               Text(
                 _formataDataHora(r.inicio),
                 style: TextStyle(
-                  color: cs.onSurface.withOpacity(.75),
-                  fontSize: 13,
-                ),
+                    color: cs.onSurface.withOpacity(.75), fontSize: 13),
               ),
               const SizedBox(width: 10),
-              Icon(
-                Icons.timer_outlined,
-                size: 18,
-                color: cs.onSurface.withOpacity(.75),
-              ),
+              Icon(Icons.timer_outlined,
+                  size: 18, color: cs.onSurface.withOpacity(.75)),
               const SizedBox(width: 6),
               Text(
                 _formataDuracao(r.duracao),
                 style: TextStyle(
-                  color: cs.onSurface.withOpacity(.75),
-                  fontSize: 13,
-                ),
+                    color: cs.onSurface.withOpacity(.75), fontSize: 13),
               ),
             ],
           ),
@@ -323,9 +302,8 @@ class _HistoricoCard extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: r.participantes
-                .map((p) => _ChipParticipante(nome: p))
-                .toList(),
+            children:
+                r.participantes.map((p) => _ChipParticipante(nome: p)).toList(),
           ),
         ],
       ),
@@ -350,15 +328,15 @@ class _ChipParticipante extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.person_outline_rounded,
-            size: 16,
-            color: cs.onSurface.withOpacity(.8),
-          ),
+          Icon(Icons.person_outline_rounded,
+              size: 16, color: cs.onSurface.withOpacity(.8)),
           const SizedBox(width: 6),
           Text(
             nome,
-            style: TextStyle(fontSize: 13, color: cs.onSurface.withOpacity(.9)),
+            style: TextStyle(
+              fontSize: 13,
+              color: cs.onSurface.withOpacity(.9),
+            ),
           ),
         ],
       ),
@@ -379,7 +357,8 @@ class _VazioCardHistorico extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Row(
         children: [
-          Icon(Icons.history_toggle_off, color: cs.onSurface.withOpacity(.8)),
+          Icon(Icons.history_toggle_off,
+              color: cs.onSurface.withOpacity(.8)),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
@@ -454,7 +433,10 @@ class _Header extends StatelessWidget {
               onTap: onBell,
             ),
             const SizedBox(width: 8),
-            _HeaderIconChip(icon: Icons.menu_rounded, onTap: onMenu),
+            _HeaderIconChip(
+              icon: Icons.menu_rounded,
+              onTap: onMenu,
+            ),
           ],
         ),
       ),
@@ -518,7 +500,10 @@ class _DockFlutuante extends StatelessWidget {
               SizedBox(width: 12),
               _MiniButton(icon: Icons.search_rounded),
               SizedBox(width: 12),
-              _MiniButton(icon: Icons.calendar_today_rounded, filled: true),
+              _MiniButton(
+                icon: Icons.calendar_today_rounded,
+                filled: true,
+              ),
             ],
           ),
         ),
@@ -530,7 +515,10 @@ class _DockFlutuante extends StatelessWidget {
 class _MiniButton extends StatelessWidget {
   final IconData icon;
   final bool filled;
-  const _MiniButton({required this.icon, this.filled = false});
+  const _MiniButton({
+    required this.icon,
+    this.filled = false,
+  });
 
   @override
   Widget build(BuildContext context) {

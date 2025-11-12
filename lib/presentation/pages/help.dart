@@ -12,36 +12,31 @@ class _HelpPageState extends State<HelpPage> {
   final List<_FaqItem> _faqs = const [
     _FaqItem(
       q: 'Como recuperar minha senha?',
-      a:
-          'Na tela de login, toque em "Esqueci minha senha" e siga as instruções. '
+      a: 'Na tela de login, toque em "Esqueci minha senha" e siga as instruções. '
           'Se o e-mail não chegar em alguns minutos, verifique a caixa de spam.',
       tags: ['senha', 'login', 'email'],
     ),
     _FaqItem(
       q: 'Não consigo entrar, o app diz "credenciais inválidas".',
-      a:
-          'Confirme se digitou o e-mail corretamente e se a senha possui pelo menos 6 caracteres. '
+      a: 'Confirme se digitou o e-mail corretamente e se a senha possui pelo menos 6 caracteres. '
           'Se o problema persistir, redefina a senha.',
       tags: ['erro', 'login', 'credenciais'],
     ),
     _FaqItem(
       q: 'Posso usar o app sem internet?',
-      a:
-          'Algumas funções exigem conexão. Você consegue abrir o app e visualizar dados já baixados, '
+      a: 'Algumas funções exigem conexão. Você consegue abrir o app e visualizar dados já baixados, '
           'mas para sincronizar ou autenticar é preciso estar online.',
       tags: ['offline', 'internet'],
     ),
     _FaqItem(
       q: 'Como alterar meu e-mail?',
-      a:
-          'Após entrar, abra o menu Perfil > Conta e edite seu e-mail. '
+      a: 'Após entrar, abra o menu Perfil > Conta e edite seu e-mail. '
           'Por segurança, confirmaremos a alteração via mensagem.',
       tags: ['perfil', 'conta', 'email'],
     ),
     _FaqItem(
       q: 'Onde falo com o suporte?',
-      a:
-          'Na seção "Contato & Suporte" abaixo você encontra as opções para enviar mensagem, '
+      a: 'Na seção "Contato & Suporte" abaixo você encontra as opções para enviar mensagem, '
           'abrir um ticket ou consultar a documentação.',
       tags: ['suporte', 'contato'],
     ),
@@ -62,8 +57,7 @@ class _HelpPageState extends State<HelpPage> {
     final filtered = _query.isEmpty
         ? _faqs
         : _faqs.where((f) {
-            final hay = (f.q + ' ' + f.a + ' ' + f.tags.join(' '))
-                .toLowerCase();
+            final hay = (f.q + ' ' + f.a + ' ' + f.tags.join(' ')).toLowerCase();
             return hay.contains(_query);
           }).toList();
 
@@ -128,16 +122,12 @@ class _HelpPageState extends State<HelpPage> {
           const SizedBox(height: 18),
 
           // CONTATO & SUPORTE
-          Text(
-            'Contato & Suporte',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Contato & Suporte',
+              style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           Card(
             color: Theme.of(context).colorScheme.surface,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Column(
               children: [
                 ListTile(
@@ -166,10 +156,7 @@ class _HelpPageState extends State<HelpPage> {
           const SizedBox(height: 14),
 
           // OUTROS
-          Text(
-            'Outros recursos',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
+          Text('Outros recursos', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 8),
           _LinkRow(
             icon: Icons.privacy_tip_outlined,
@@ -186,9 +173,7 @@ class _HelpPageState extends State<HelpPage> {
           Center(
             child: Text(
               'Precisa de algo que não está aqui? Toque em “Enviar feedback” no topo.',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(color: cs.outline),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: cs.outline),
               textAlign: TextAlign.center,
             ),
           ),
@@ -199,23 +184,19 @@ class _HelpPageState extends State<HelpPage> {
 
   void _setQuery(String q) {
     _searchCtrl.text = q;
-    _searchCtrl.selection = TextSelection.fromPosition(
-      TextPosition(offset: q.length),
-    );
+    _searchCtrl.selection = TextSelection.fromPosition(TextPosition(offset: q.length));
     setState(() {});
   }
 
   void _fakeAction(BuildContext context, String label) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text('$label — ação de exemplo')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$label — ação de exemplo')),
+    );
   }
 
   void _scrollToContact(BuildContext context) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Role até "Contato & Suporte" para falar conosco.'),
-      ),
+      const SnackBar(content: Text('Role até "Contato & Suporte" para falar conosco.')),
     );
   }
 
@@ -231,15 +212,11 @@ class _HelpPageState extends State<HelpPage> {
             minLines: 3,
             maxLines: 6,
             decoration: const InputDecoration(
-              hintText:
-                  'Conte brevemente o que você precisa ou o problema encontrado',
+              hintText: 'Conte brevemente o que você precisa ou o problema encontrado',
             ),
           ),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancelar'),
-            ),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
             FilledButton(
               onPressed: () => Navigator.pop(context, controller.text.trim()),
               child: const Text('Enviar'),
@@ -277,14 +254,10 @@ class _FaqTile extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Theme(
-        data: Theme.of(
-          context,
-        ).copyWith(dividerColor: cs.outlineVariant.withOpacity(.15)),
+        data: Theme.of(context).copyWith(dividerColor: cs.outlineVariant.withOpacity(.15)),
         child: ExpansionTile(
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-          collapsedShape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.zero,
-          ),
+          collapsedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
           tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
           childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           title: Text(item.q),
@@ -309,11 +282,7 @@ class _LinkRow extends StatelessWidget {
   final String title;
   final VoidCallback onTap;
 
-  const _LinkRow({
-    required this.icon,
-    required this.title,
-    required this.onTap,
-  });
+  const _LinkRow({required this.icon, required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -373,9 +342,10 @@ class _EmptyState extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'Nenhum resultado',
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 6),
           Text(
@@ -383,9 +353,9 @@ class _EmptyState extends StatelessWidget {
                 ? 'Tente buscar por um termo.'
                 : 'Não encontramos nada para "$query".',
             textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: cs.outline),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: cs.outline,
+                ),
           ),
           const SizedBox(height: 16),
           TextButton.icon(
