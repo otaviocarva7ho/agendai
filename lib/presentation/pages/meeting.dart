@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'confirmation.dart';
 
-
 class CriarReuniaoPage extends StatefulWidget {
   const CriarReuniaoPage({super.key});
   static const route = '/criar-reuniao';
@@ -37,8 +36,8 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
       builder: (context, child) => Theme(
         data: Theme.of(context).copyWith(
           colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: Theme.of(context).colorScheme.primary,
-              ),
+            primary: Theme.of(context).colorScheme.primary,
+          ),
         ),
         child: child!,
       ),
@@ -52,9 +51,9 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
       context: context,
       initialTime: base,
       builder: (context, child) => Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme,
-        ),
+        data: Theme.of(
+          context,
+        ).copyWith(colorScheme: Theme.of(context).colorScheme),
         child: child!,
       ),
     );
@@ -106,17 +105,20 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
                       decoration: BoxDecoration(
                         color: const Color(0xFF0F1A29),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white.withOpacity(.08)),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(.08),
+                        ),
                       ),
                       child: const Icon(Icons.arrow_back, size: 22),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Text('Criar Reunião',
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleLarge
-                          ?.copyWith(fontWeight: FontWeight.w600)),
+                  Text(
+                    'Criar Reunião',
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -145,8 +147,9 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
                     Expanded(
                       child: _BlockTitleSubtitle(
                         title: 'Data da reunião',
-                        subtitle:
-                            _date == null ? 'Sem data prevista' : _fmtDate(_date!),
+                        subtitle: _date == null
+                            ? 'Sem data prevista'
+                            : _fmtDate(_date!),
                       ),
                     ),
                     _IconCircleButton(
@@ -168,11 +171,12 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Horário da reunião',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      'Horário da reunião',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
@@ -206,11 +210,12 @@ class _CriarReuniaoPageState extends State<CriarReuniaoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Plataforma',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      'Plataforma',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Row(
                       children: [
@@ -328,11 +333,12 @@ class _BlockTitleSubtitle extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w600)),
+        Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 4),
         Opacity(
           opacity: .7,

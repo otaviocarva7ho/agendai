@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'package:agendai/presentation/pages/initial.dart';
+import 'package:agendai/presentation/pages/chats.dart';
 
 // ----------------------------- PAGE -----------------------------
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
+
+  static const route = '/calendar';
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -49,10 +53,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(
-                        child: _Header(
-                          onBell: () {},
-                          onMenu: () {},
-                        ),
+                        child: _Header(onBell: () {}, onMenu: () {}),
                       ),
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
@@ -111,6 +112,8 @@ class _CalendarPageState extends State<CalendarPage> {
                       ),
                     ],
                   ),
+
+                  // Navbar flutuante, estilo da primeira página
                   const _DockFlutuante(),
                 ],
               ),
@@ -281,6 +284,10 @@ class _Header extends StatelessWidget {
               icon: Icons.menu_rounded,
               onTap: onMenu,
             ),
+            const SizedBox(width: 8),
+
+            // Botão menu (chip)
+            _HeaderIconChip(icon: Icons.menu_rounded, onTap: onMenu),
           ],
         ),
       ),
@@ -392,27 +399,28 @@ class _CalendarioGrid extends StatelessWidget {
     final cells = startWeekday + totalDays;
     final rows = (cells / 7.0).ceil();
 
-    const dias = ['D','S','T','Q','Q','S','S'];
+    const dias = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: dias
-              .map((d) => Expanded(
-                    child: Center(
-                      child: Text(
-                        d,
-                        style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(.7),
-                          fontWeight: FontWeight.w600,
-                        ),
+              .map(
+                (d) => Expanded(
+                  child: Center(
+                    child: Text(
+                      d,
+                      style: TextStyle(
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.onSurface.withOpacity(.7),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ))
+                  ),
+                ),
+              )
               .toList(),
         ),
         const SizedBox(height: 8),
@@ -425,10 +433,12 @@ class _CalendarioGrid extends StatelessWidget {
                   final index = r * 7 + c;
                   final dayNum = index - startWeekday + 1;
                   final inMonth = dayNum >= 1 && dayNum <= totalDays;
-                  final date =
-                      inMonth ? DateTime(month.year, month.month, dayNum) : null;
+                  final date = inMonth
+                      ? DateTime(month.year, month.month, dayNum)
+                      : null;
                   final isSelected =
-                      date != null && selecionado != null &&
+                      date != null &&
+                      selecionado != null &&
                       date.year == selecionado!.year &&
                       date.month == selecionado!.month &&
                       date.day == selecionado!.day;
@@ -650,28 +660,67 @@ class _DockFlutuante extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    Widget item({
+      required IconData icon,
+      required bool active,
+      required VoidCallback? onTap,
+    }) {
+      final color = active ? cs.primary : Colors.white70;
+
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(22),
+          onTap: onTap,
+          child: Container(
+            width: 64,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              // ESTILO AJUSTADO: igual à InitialPage (sem borda no ativo)
+              color: active ? color.withOpacity(.14) : Colors.transparent,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Icon(icon, color: color),
+          ),
+        ),
+      );
+    }
+
     return Positioned(
       left: 0,
       right: 0,
-      bottom: 24,
+      bottom: 16,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           decoration: BoxDecoration(
-            color: cs.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: cs.outlineVariant),
+            color: const Color(0xFF0F1A29),
+            borderRadius: BorderRadius.circular(26),
+            border: Border.all(color: Colors.white.withOpacity(.1)),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const [
-              _MiniButton(icon: Icons.chat_bubble_outline_rounded),
-              SizedBox(width: 12),
-              _MiniButton(icon: Icons.search_rounded),
-              SizedBox(width: 12),
-              _MiniButton(
-                icon: Icons.calendar_today_rounded,
-                filled: true,
+            children: [
+              item(
+                icon: Icons.person_outline,
+                active: false,
+                onTap: () => Navigator.of(
+                  context,
+                ).pushReplacementNamed(InitialPage.route),
+              ),
+              item(
+                icon: Icons.message_outlined,
+                active: false,
+                onTap: () => Navigator.of(
+                  context,
+                ).pushReplacementNamed(ChatPanelTab.route),
+              ),
+              item(
+                icon: Icons.calendar_month,
+                active: true, // estamos no calendário
+                onTap: null, // não faz nada
               ),
             ],
           ),
@@ -681,18 +730,18 @@ class _DockFlutuante extends StatelessWidget {
   }
 }
 
+// (Opcional) Mantido caso você use em outro lugar; pode remover se estiver ocioso.
 class _MiniButton extends StatelessWidget {
   final IconData icon;
   final bool filled;
-  const _MiniButton({
-    required this.icon,
-    this.filled = false,
-  });
+  final VoidCallback? onTap;
+
+  const _MiniButton({required this.icon, this.filled = false, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return Container(
+    final child = Container(
       width: 44,
       height: 44,
       alignment: Alignment.center,
@@ -705,6 +754,17 @@ class _MiniButton extends StatelessWidget {
         icon,
         size: 22,
         color: filled ? cs.onPrimary : cs.onSurface.withOpacity(.7),
+      ),
+    );
+
+    if (onTap == null) return child;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: onTap,
+        child: child,
       ),
     );
   }

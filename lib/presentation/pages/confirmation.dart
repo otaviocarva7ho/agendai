@@ -43,10 +43,9 @@ class SuccessPage extends StatelessWidget {
               Text(
                 'Reunião gerada com sucesso!',
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleLarge
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 32),
@@ -64,8 +63,10 @@ class SuccessPage extends StatelessWidget {
 
               // código da reunião
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 14, vertical: 18),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 18,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF0F1A29),
                   borderRadius: BorderRadius.circular(14),
@@ -90,7 +91,10 @@ class SuccessPage extends StatelessWidget {
                         Clipboard.setData(ClipboardData(text: code));
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                              content: Text('Código copiado para a área de transferência!')),
+                            content: Text(
+                              'Código copiado para a área de transferência!',
+                            ),
+                          ),
                         );
                       },
                       borderRadius: BorderRadius.circular(12),
@@ -117,7 +121,8 @@ class SuccessPage extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     side: BorderSide(color: cs.primary.withOpacity(.6)),
                   ),
                   onPressed: () {

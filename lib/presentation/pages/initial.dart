@@ -277,7 +277,7 @@ class _InitialPageState extends State<InitialPage>
               ),
             ),
 
-            // Bottom pill nav
+            // Bottom pill nav (3 abas padrão: Inicial, Chat, Calendário)
             const _BottomPill(),
           ],
         ),
@@ -311,11 +311,12 @@ class _Header extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text('Olá, João',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600)),
+            child: Text(
+              'Olá, João',
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
           ),
           IconButton(
             onPressed: () {},
@@ -586,7 +587,7 @@ class QuickAction extends StatelessWidget {
                   color: Colors.black.withOpacity(.35),
                   blurRadius: 12,
                   offset: const Offset(0, 6),
-                )
+                ),
               ],
             ),
             child: Icon(icon, color: cs.primary),
@@ -603,7 +604,7 @@ class QuickAction extends StatelessWidget {
                 color: Colors.white.withOpacity(.75),
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -681,8 +682,8 @@ class _BottomPill extends StatelessWidget {
             children: [
               _PillItem(
                 icon: Icons.person_outline,
-                active: true,
-                onTap: () {},
+                active: true, // estamos na inicial
+                onTap: () {}, // não faz nada
                 activeColor: cs.primary,
               ),
               _PillItem(icon: Icons.search, onTap: () {}),
@@ -714,8 +715,9 @@ class _PillItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color =
-        active ? (activeColor ?? Theme.of(context).colorScheme.primary) : null;
+    final color = active
+        ? (activeColor ?? Theme.of(context).colorScheme.primary)
+        : null;
 
     return InkWell(
       borderRadius: BorderRadius.circular(22),
