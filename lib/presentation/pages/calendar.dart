@@ -14,11 +14,26 @@ class _CalendarPageState extends State<CalendarPage> {
   DateTime mesBase = DateTime(2025, 8, 1); // Agosto 2025
   DateTime? selecionado = DateTime(2025, 8, 1);
 
+  // NOVO: armazenar reuniões canceladas (id estável por titulo+inicio)
+  final Set<String> _cancelados = {};
+
+  void _mudaMes(int delta) {
+    // delta: -1 (anterior) | +1 (próximo)
+    final novo = DateTime(mesBase.year, mesBase.month + delta, 1);
+    setState(() {
+      mesBase = novo;
+      selecionado = DateTime(novo.year, novo.month, 1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
 
-    final compromissos = _fakeCompromissos(selecionado ?? mesBase);
+    final compromissosAll = _fakeCompromissos(selecionado ?? mesBase);
+    final compromissos = compromissosAll
+        .where((r) => !_cancelados.contains(_idReuniao(r)))
+        .toList();
 
     return Scaffold(
       backgroundColor: cs.background,
@@ -43,8 +58,9 @@ class _CalendarPageState extends State<CalendarPage> {
                         padding: const EdgeInsets.fromLTRB(20, 18, 20, 8),
                         sliver: SliverToBoxAdapter(
                           child: _MesTitulo(
-                            data: selecionado ?? mesBase,
-                            onAbrirMes: () {},
+                            data: mesBase,
+                            onPrev: () => _mudaMes(-1),
+                            onNext: () => _mudaMes(1),
                           ),
                         ),
                       ),
@@ -72,6 +88,17 @@ class _CalendarPageState extends State<CalendarPage> {
                                     resumo: r.resumo,
                                     metodo: r.metodo,
                                     dataCurta: _formataCurto(r.inicio),
+                                    onCancelar: () {
+                                      setState(() {
+                                        _cancelados.add(_idReuniao(r));
+                                      });
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content:
+                                              Text('Reunião cancelada!'),
+                                        ),
+                                      );
+                                    },
                                   );
                                 },
                                 separatorBuilder: (_, __) =>
@@ -109,6 +136,9 @@ class Reuniao {
     required this.inicio,
   });
 }
+
+// NOVO: id estável para cada reunião
+String _idReuniao(Reuniao r) => '${r.titulo}|${r.inicio.toIso8601String()}';
 
 /// Gera compromissos determinísticos "de mentirinha" a partir do dia tocado.
 /// Assim, praticamente todo dia tem algo diferente — sem depender de rede/BD.
@@ -194,19 +224,29 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    return ClipRRect(
-      borderRadius: const BorderRadius.only(
-        bottomLeft: Radius.circular(28),
-        bottomRight: Radius.circular(28),
-      ),
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(20, 16, 16, 18),
-        color: Colors.transparent,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          color: cs.surfaceContainerHigh, // barra “cheia”
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: cs.outlineVariant),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.10),
+              blurRadius: 14,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
         child: Row(
           children: [
+            // Avatar
             Container(
-              width: 46,
-              height: 46,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
                 color: cs.secondary,
                 shape: BoxShape.circle,
@@ -214,23 +254,32 @@ class _Header extends StatelessWidget {
               child: Icon(Icons.person, color: cs.onSecondary),
             ),
             const SizedBox(width: 12),
+            // Título
             Expanded(
               child: Text(
                 'Calendário de João',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 18,
                   fontWeight: FontWeight.w700,
                   color: cs.onSurface,
                 ),
               ),
             ),
-            IconButton(
-              onPressed: onBell,
-              icon: const Icon(Icons.notifications_none_rounded),
+            const SizedBox(width: 8),
+
+            // Botão sino (chip)
+            _HeaderIconChip(
+              icon: Icons.notifications_none_rounded,
+              onTap: onBell,
             ),
-            IconButton(
-              onPressed: onMenu,
-              icon: const Icon(Icons.menu_rounded),
+            const SizedBox(width: 8),
+
+            // Botão menu (chip)
+            _HeaderIconChip(
+              icon: Icons.menu_rounded,
+              onTap: onMenu,
             ),
           ],
         ),
@@ -239,42 +288,84 @@ class _Header extends StatelessWidget {
   }
 }
 
+class _HeaderIconChip extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _HeaderIconChip({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: onTap,
+        child: Container(
+          width: 40,
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: cs.surface, // contraste leve com a barra
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: cs.outlineVariant),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            // um toque de destaque, parecido com o print
+            color: cs.primary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
 class _MesTitulo extends StatelessWidget {
   final DateTime data;
-  final VoidCallback onAbrirMes;
-  const _MesTitulo({required this.data, required this.onAbrirMes});
+  final VoidCallback onPrev; // NOVO
+  final VoidCallback onNext; // NOVO
+  const _MesTitulo({
+    required this.data,
+    required this.onPrev,
+    required this.onNext,
+  });
 
   static const _meses = [
     'Janeiro','Fevereiro','Março','Abril','Maio','Junho',
     'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'
   ];
-  static const _dias = [
-    'Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'
-  ];
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final titulo =
-        '${_dias[data.weekday % 7]}, ${_meses[data.month - 1]} ${data.year}';
+    final titulo = '${_meses[data.month - 1]} ${data.year}';
+
     return Row(
       children: [
-        Text(
-          titulo,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: cs.onSurface,
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          onPressed: onPrev,
+          icon: const Icon(Icons.chevron_left_rounded),
+        ),
+        Expanded(
+          child: Center(
+            child: Text(
+              titulo,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: cs.onSurface,
+              ),
+            ),
           ),
         ),
-        const Spacer(),
-        Transform.rotate(
-          angle: math.pi,
-          child: IconButton(
-            visualDensity: VisualDensity.compact,
-            onPressed: onAbrirMes,
-            icon: const Icon(Icons.arrow_drop_down),
-          ),
+        IconButton(
+          visualDensity: VisualDensity.compact,
+          onPressed: onNext,
+          icon: const Icon(Icons.chevron_right_rounded),
         ),
       ],
     );
@@ -382,17 +473,42 @@ class _ReuniaoCard extends StatelessWidget {
   final String resumo;
   final String metodo;
   final String dataCurta;
+  final VoidCallback onCancelar; // NOVO
 
   const _ReuniaoCard({
     required this.titulo,
     required this.resumo,
     required this.metodo,
     required this.dataCurta,
+    required this.onCancelar,
   });
 
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
+
+    Future<void> _confirmarCancelamento() async {
+      final resp = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Tem certeza que deseja cancelar a reunião?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('Não'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              child: const Text('Sim'),
+            ),
+          ],
+        ),
+      );
+      if (resp == true) {
+        onCancelar();
+      }
+    }
+
     return Container(
       decoration: BoxDecoration(
         color: cs.surfaceContainerLow,
@@ -407,13 +523,31 @@ class _ReuniaoCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  titulo,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: cs.onSurface,
-                  ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        titulo,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: cs.onSurface,
+                        ),
+                      ),
+                    ),
+                    // Botão X
+                    InkWell(
+                      onTap: _confirmarCancelamento,
+                      borderRadius: BorderRadius.circular(8),
+                      child: const Padding(
+                        padding: EdgeInsets.all(4.0),
+                        child: Icon(
+                          Icons.close_rounded,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 RichText(
@@ -469,10 +603,7 @@ class _ReuniaoCard extends StatelessWidget {
             width: 38,
             height: 38,
             decoration: BoxDecoration(
-              color: Theme.of(context)
-                  .colorScheme
-                  .primary
-                  .withOpacity(.15),
+              color: Theme.of(context).colorScheme.primary.withOpacity(.15),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(Icons.group_outlined, color: cs.onSurface),
