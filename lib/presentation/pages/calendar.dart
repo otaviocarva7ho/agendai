@@ -40,14 +40,12 @@ class _CalendarPageState extends State<CalendarPage> {
         .toList();
 
     return Scaffold(
-      backgroundColor: cs.background,
       body: SafeArea(
         bottom: false,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
             child: Container(
-              color: cs.surface,
               child: Stack(
                 children: [
                   CustomScrollView(
@@ -257,6 +255,7 @@ class _Header extends StatelessWidget {
               child: Icon(Icons.person, color: cs.onSecondary),
             ),
             const SizedBox(width: 12),
+
             // Título
             Expanded(
               child: Text(
@@ -272,24 +271,20 @@ class _Header extends StatelessWidget {
             ),
             const SizedBox(width: 8),
 
-            // Botão sino (chip)
+            // Sino
             _HeaderIconChip(
               icon: Icons.notifications_none_rounded,
               onTap: onBell,
             ),
             const SizedBox(width: 8),
 
-            // Botão menu (chip)
+            // Menu (apenas um)
             _HeaderIconChip(
               icon: Icons.menu_rounded,
               onTap: onMenu,
             ),
-            const SizedBox(width: 8),
-
-            // Botão menu (chip)
-            _HeaderIconChip(icon: Icons.menu_rounded, onTap: onMenu),
           ],
-        ),
+        )
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
+import 'initial.dart'; // navegação de volta
 
 // ----------------------------- PAGE -----------------------------
 
@@ -49,7 +50,6 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
     final cs = Theme.of(context).colorScheme;
 
     return Scaffold(
-      backgroundColor: cs.background,
       body: SafeArea(
         bottom: false,
         child: Center(
@@ -59,18 +59,11 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
               children: [
                 CustomScrollView(
                   slivers: [
-                    SliverToBoxAdapter(
-                      child: _Header(
-                        titulo: 'Histórico de reuniões',
-                        onBell: () {},
-                        onMenu: () {},
-                      ),
-                    ),
-                    const SliverPadding(padding: EdgeInsets.only(top: 8)),
+                    // 🔻 Navbar removida
+                    const SliverPadding(padding: EdgeInsets.only(top: 16)),
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                         child: TextField(
                           controller: _searchController,
                           decoration: InputDecoration(
@@ -86,8 +79,7 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                               borderRadius: BorderRadius.circular(14),
                               borderSide: BorderSide(color: cs.outlineVariant),
                             ),
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
+                            contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8),
                           ),
                         ),
                       ),
@@ -95,13 +87,10 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                     SliverPadding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       sliver: _historicoFiltrado.isEmpty
-                          ? SliverToBoxAdapter(
-                              child: _VazioCardHistorico(),
-                            )
+                          ? SliverToBoxAdapter(child: _VazioCardHistorico())
                           : SliverList.separated(
                               itemCount: _historicoFiltrado.length,
-                              separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 12),
+                              separatorBuilder: (_, __) => const SizedBox(height: 12),
                               itemBuilder: (context, i) {
                                 final r = _historicoFiltrado[i];
                                 return _HistoricoCard(r: r);
@@ -111,7 +100,48 @@ class _HistoricoReunioesPageState extends State<HistoricoReunioesPage> {
                     const SliverPadding(padding: EdgeInsets.only(bottom: 140)),
                   ],
                 ),
-                const _DockFlutuante(),
+
+                // 🔹 Botão de voltar fixo no canto superior esquerdo
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(22),
+                      onTap: () {
+                        // Volta para a InitialPage substituindo a tela atual
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (_) => const InitialPage()),
+                        );
+
+                        // Alternativa com rotas nomeadas:
+                        // Navigator.of(context).pushNamedAndRemoveUntil(
+                        //   InitialPage.route,
+                        //   (route) => false,
+                        // );
+                      },
+                      child: Container(
+                        width: 44,
+                        height: 44,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: cs.surfaceContainerHigh,
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(color: cs.outlineVariant),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withValues(alpha: 0.10),
+                              blurRadius: 12,
+                              offset: const Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Icon(Icons.arrow_back_rounded, color: cs.primary, size: 22),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -250,8 +280,7 @@ class _HistoricoCard extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: cs.surface,
                   border: Border.all(color: cs.outlineVariant),
@@ -261,7 +290,7 @@ class _HistoricoCard extends StatelessWidget {
                   r.id,
                   style: TextStyle(
                     fontSize: 12,
-                    color: cs.onSurface.withOpacity(.8),
+                    color: cs.onSurface.withValues(alpha: .8),
                   ),
                 ),
               ),
@@ -270,22 +299,18 @@ class _HistoricoCard extends StatelessWidget {
           const SizedBox(height: 10),
           Row(
             children: [
-              Icon(Icons.event_available_rounded,
-                  size: 18, color: cs.onSurface.withOpacity(.75)),
+              Icon(Icons.event_available_rounded, size: 18, color: cs.onSurface.withValues(alpha: .75)),
               const SizedBox(width: 6),
               Text(
                 _formataDataHora(r.inicio),
-                style: TextStyle(
-                    color: cs.onSurface.withOpacity(.75), fontSize: 13),
+                style: TextStyle(color: cs.onSurface.withValues(alpha: .75), fontSize: 13),
               ),
               const SizedBox(width: 10),
-              Icon(Icons.timer_outlined,
-                  size: 18, color: cs.onSurface.withOpacity(.75)),
+              Icon(Icons.timer_outlined, size: 18, color: cs.onSurface.withValues(alpha: .75)),
               const SizedBox(width: 6),
               Text(
                 _formataDuracao(r.duracao),
-                style: TextStyle(
-                    color: cs.onSurface.withOpacity(.75), fontSize: 13),
+                style: TextStyle(color: cs.onSurface.withValues(alpha: .75), fontSize: 13),
               ),
             ],
           ),
@@ -302,8 +327,7 @@ class _HistoricoCard extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children:
-                r.participantes.map((p) => _ChipParticipante(nome: p)).toList(),
+            children: r.participantes.map((p) => _ChipParticipante(nome: p)).toList(),
           ),
         ],
       ),
@@ -328,14 +352,13 @@ class _ChipParticipante extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.person_outline_rounded,
-              size: 16, color: cs.onSurface.withOpacity(.8)),
+          Icon(Icons.person_outline_rounded, size: 16, color: cs.onSurface.withValues(alpha: .8)),
           const SizedBox(width: 6),
           Text(
             nome,
             style: TextStyle(
               fontSize: 13,
-              color: cs.onSurface.withOpacity(.9),
+              color: cs.onSurface.withValues(alpha: .9),
             ),
           ),
         ],
@@ -357,185 +380,15 @@ class _VazioCardHistorico extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
       child: Row(
         children: [
-          Icon(Icons.history_toggle_off,
-              color: cs.onSurface.withOpacity(.8)),
+          Icon(Icons.history_toggle_off, color: cs.onSurface.withValues(alpha: .8)),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               'Nenhuma reunião encontrada.',
-              style: TextStyle(color: cs.onSurface.withOpacity(.9)),
+              style: TextStyle(color: cs.onSurface.withValues(alpha: .9)),
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// ----------------------------- BARRA SUPERIOR (mesmo estilo) -----------------------------
-
-class _Header extends StatelessWidget {
-  final String titulo;
-  final VoidCallback onBell;
-  final VoidCallback onMenu;
-  const _Header({
-    required this.titulo,
-    required this.onBell,
-    required this.onMenu,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 6),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-        decoration: BoxDecoration(
-          color: cs.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: cs.outlineVariant),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.10),
-              blurRadius: 14,
-              offset: const Offset(0, 6),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 44,
-              height: 44,
-              decoration: BoxDecoration(
-                color: cs.secondary,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(Icons.person, color: cs.onSecondary),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                titulo,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  color: cs.onSurface,
-                ),
-              ),
-            ),
-            const SizedBox(width: 8),
-            _HeaderIconChip(
-              icon: Icons.notifications_none_rounded,
-              onTap: onBell,
-            ),
-            const SizedBox(width: 8),
-            _HeaderIconChip(
-              icon: Icons.menu_rounded,
-              onTap: onMenu,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _HeaderIconChip extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-  const _HeaderIconChip({required this.icon, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: onTap,
-        child: Container(
-          width: 40,
-          height: 40,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: cs.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: cs.outlineVariant),
-          ),
-          child: Icon(icon, size: 20, color: cs.primary),
-        ),
-      ),
-    );
-  }
-}
-
-// ----------------------------- DOCK INFERIOR -----------------------------
-
-class _DockFlutuante extends StatelessWidget {
-  const _DockFlutuante();
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 24,
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          decoration: BoxDecoration(
-            color: cs.surfaceContainerLow,
-            borderRadius: BorderRadius.circular(28),
-            border: Border.all(color: cs.outlineVariant),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              _MiniButton(icon: Icons.chat_bubble_outline_rounded),
-              SizedBox(width: 12),
-              _MiniButton(icon: Icons.search_rounded),
-              SizedBox(width: 12),
-              _MiniButton(
-                icon: Icons.calendar_today_rounded,
-                filled: true,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _MiniButton extends StatelessWidget {
-  final IconData icon;
-  final bool filled;
-  const _MiniButton({
-    required this.icon,
-    this.filled = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Container(
-      width: 44,
-      height: 44,
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: filled ? cs.primary : Colors.transparent,
-        borderRadius: BorderRadius.circular(22),
-        border: filled ? null : Border.all(color: cs.outline),
-      ),
-      child: Icon(
-        icon,
-        size: 22,
-        color: filled ? cs.onPrimary : cs.onSurface.withOpacity(.7),
       ),
     );
   }

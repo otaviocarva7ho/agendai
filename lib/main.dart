@@ -16,7 +16,7 @@ class MeetingApp extends StatelessWidget {
       title: 'Agenda',
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0D1117),
+        scaffoldBackgroundColor: const Color(0xFF0A0C10),
         useMaterial3: true,
         fontFamily: 'Inter',
         colorScheme: ColorScheme.fromSeed(

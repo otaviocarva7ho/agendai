@@ -64,7 +64,6 @@ class _ChatPanelTabState extends State<ChatPanelTab> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFF0E1116),
         body: Stack(
           children: [
             SingleChildScrollView(

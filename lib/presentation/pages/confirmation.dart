@@ -13,7 +13,6 @@ class SuccessPage extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xFF0B0F17),
         body: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
