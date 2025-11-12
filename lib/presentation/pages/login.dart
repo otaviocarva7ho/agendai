@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'password.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -209,15 +210,14 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                       alignment: Alignment.centerRight,
                                       child: TextButton(
                                         onPressed: () {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
-                                                content:
-                                                    Text('Recuperação de senha em breve.')),
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (_) => const EsqueciSenhaPage()),
                                           );
                                         },
-                                        child: const Text('Esqueci minha senha'),
-                                      ),
-                                    ),
+                                            child: const Text('Esqueci minha senha'),
+                                          ),
+                                        ),
                                     const SizedBox(height: 6),
                                     AnimatedSwitcher(
                                       duration: const Duration(milliseconds: 250),
