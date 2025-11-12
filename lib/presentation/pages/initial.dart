@@ -62,6 +62,7 @@ class _InitialPageState extends State<InitialPage>
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: const Color(0xFF0A0C10),
         body: Stack(
           children: [
             // --- Conteúdo principal ---
@@ -93,7 +94,7 @@ class _InitialPageState extends State<InitialPage>
                         children: [
                           Expanded(
                             child: Text(
-                              'Reunião com (nome).',
+                              'Reunião com João e Maria. Assunto: Daily stand-up',
                               style: TextStyle(
                                 color: Colors.white.withOpacity(.88),
                                 fontSize: 16,
@@ -102,7 +103,7 @@ class _InitialPageState extends State<InitialPage>
                             ),
                           ),
                           Text(
-                            '23/08, 17h.',
+                            '12/11, 21:30h.',
                             style: TextStyle(
                               color: Colors.white.withOpacity(.6),
                               fontSize: 13,
@@ -181,11 +182,11 @@ class _InitialPageState extends State<InitialPage>
                                   color: cs.primary.withOpacity(.18),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.bolt, size: 16),
+                                child: const Icon(Icons.directions_walk_outlined, size: 22),
                               ),
                               const Spacer(),
                               Text(
-                                '23/08/2025',
+                                '12/11/2025',
                                 style: TextStyle(
                                   color: Colors.white.withOpacity(.6),
                                   fontSize: 12,
@@ -203,7 +204,7 @@ class _InitialPageState extends State<InitialPage>
                           Opacity(
                             opacity: .75,
                             child: Text(
-                              '• Hoje, você possui 3 reuniões e é aniversário do João',
+                              '• Hoje, você possui 2 reuniões e é aniversário do Otávio.',
                               style: const TextStyle(fontSize: 13),
                             ),
                           ),
@@ -217,9 +218,8 @@ class _InitialPageState extends State<InitialPage>
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const _Bullet('Reunião com João às 17h.'),
                           const _Bullet('Reunião com Ana às 18h.'),
-                          const _Bullet('Reunião com José às 19h.'),
+                          const _Bullet('Reunião com João e Maria às 21:30h.'),
                         ],
                       ),
                     ),
@@ -331,13 +331,8 @@ class _Header extends StatelessWidget {
             ),
           ),
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notifications_outlined),
-          ),
-          const SizedBox(width: 4),
-          IconButton(
             onPressed: onMenuTap,
-            icon: const Icon(Icons.menu_rounded),
+            icon: const Icon(Icons.notifications_outlined),
           ),
         ],
       ),
@@ -361,8 +356,8 @@ class _AccountMenuState extends State<_AccountMenu>
 
   // Lista de notificações (mock). Substitua pelos seus dados quando tiver backend/estado.
   final List<String> _notifications = [
-    'João ingressou na reunião X',
-    'Maria ingressou na reunião X',
+    'João ingressou na reunião Daily stand-up',
+    'Maria ingressou na reunião Daily stand-up',
   ];
 
   int get _unreadCount => _notifications.length;
