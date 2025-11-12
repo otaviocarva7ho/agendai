@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'password.dart';
+import 'register.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -257,9 +259,9 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                                   style: Theme.of(context).textTheme.bodyMedium),
                               TextButton(
                                 onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Tela de cadastro em breve.')),
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (_) => const CadastroPage()),
                                   );
                                 },
                                 child: const Text('Criar conta'),
