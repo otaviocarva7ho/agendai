@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
-
-// 👇 ADICIONADO: imports para navegação por rotas nomeadas
 import 'package:agendai/presentation/pages/initial.dart';
 import 'package:agendai/presentation/pages/chats.dart';
 
