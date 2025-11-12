@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:agendai/presentation/pages/initial.dart';
+import 'package:agendai/presentation/pages/calendar.dart';
 
 class ChatPanelTab extends StatelessWidget {
   const ChatPanelTab({super.key});
@@ -37,7 +38,7 @@ class ChatPanelTab extends StatelessWidget {
                   _MeetingsSection(label: 'Ontem'),
                   SizedBox(height: 6),
                   _MeetingTile(
-                    name: 'Reunião com X',
+                    name: 'Reunião com Y',
                     subtitle: 'Lorem ipsum dolor sit amet.',
                     avatarAsset: null,
                   ),
@@ -45,12 +46,12 @@ class ChatPanelTab extends StatelessWidget {
                   _MeetingsSection(label: 'Segunda'),
                   SizedBox(height: 6),
                   _MeetingTile(
-                    name: 'Reunião com X',
+                    name: 'Reunião com Z',
                     subtitle: 'Lorem ipsum dolor sit amet.',
                     avatarAsset: null,
                   ),
                   _MeetingTile(
-                    name: 'Reunião com X',
+                    name: 'Reunião com W',
                     subtitle: 'Lorem ipsum dolor sit amet.',
                     avatarAsset: null,
                   ),
@@ -58,7 +59,7 @@ class ChatPanelTab extends StatelessWidget {
               ),
             ),
 
-            // ========= NAVBAR FLUTUANTE =========
+            // ========= NAVBAR FLUTUANTE (estilo da InitialPage) =========
             _BottomPillNav(
               index: 1, // chat selecionado
               onChanged: (i) {
@@ -72,13 +73,16 @@ class ChatPanelTab extends StatelessWidget {
                     // já está no chat
                     break;
                   case 2:
-                    // TODO: quando criar a tela de calendário, navegar aqui
+                    Navigator.of(
+                      context,
+                    ).pushReplacementNamed(CalendarPage.route);
                     break;
                 }
               },
             ),
           ],
         ),
+        backgroundColor: cs.surface,
       ),
     );
   }
@@ -150,7 +154,7 @@ class _HeroHeader extends StatelessWidget {
               children: const [
                 TextSpan(text: 'Crie sua reunião\nde forma rápida\ne '),
                 TextSpan(
-                  text: 'facil',
+                  text: 'fácil',
                   style: TextStyle(fontWeight: FontWeight.w900),
                 ),
                 TextSpan(text: ' !'),
@@ -201,7 +205,7 @@ class _RoundAction extends StatelessWidget {
           ),
         ],
       ),
-      child: const Icon(Icons.add, size: 26, color: Colors.white),
+      child: Icon(icon, size: 26, color: Colors.white),
     );
   }
 }
@@ -282,7 +286,7 @@ class _MeetingTile extends StatelessWidget {
   }
 }
 
-// -------------------- NAVBAR --------------------
+// -------------------- NAVBAR (estilo InitialPage) --------------------
 
 class _BottomPillNav extends StatelessWidget {
   final int index; // 0=inicial, 1=chat, 2=calendário (ex.)
@@ -298,19 +302,22 @@ class _BottomPillNav extends StatelessWidget {
       final active = index == i;
       final color = active ? cs.primary : Colors.white70;
 
-      return InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: () => onChanged?.call(i),
-        child: Container(
-          width: 64,
-          height: 44,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: active ? color.withOpacity(.14) : Colors.transparent,
-            borderRadius: BorderRadius.circular(22),
-            border: active ? Border.all(color: color, width: 1) : null,
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(22),
+          onTap: () => onChanged?.call(i),
+          child: Container(
+            width: 64,
+            height: 44,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              // igual à InitialPage: sem borda, apenas fill suave quando ativo
+              color: active ? color.withOpacity(.14) : Colors.transparent,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            child: Icon(icon, color: color),
           ),
-          child: Icon(icon, color: color),
         ),
       );
     }
@@ -330,9 +337,9 @@ class _BottomPillNav extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              item(Icons.home_outlined, 0),
-              item(Icons.search, 1),
-              item(Icons.calendar_month_outlined, 2),
+              item(Icons.person_outline, 0),
+              item(Icons.message_outlined, 1),
+              item(Icons.calendar_month, 2),
             ],
           ),
         ),
