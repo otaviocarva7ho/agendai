@@ -3,7 +3,6 @@ import 'meeting.dart';
 import 'history.dart';
 import 'help.dart'; // ajuste o caminho se for diferente
 
-
 /// Página inicial da Agenda.
 /// Use como `home:` no MaterialApp ou registre em uma rota do seu Router.
 class InitialPage extends StatefulWidget {
@@ -24,8 +23,10 @@ class _InitialPageState extends State<InitialPage>
   @override
   void initState() {
     super.initState();
-    _menuCtrl =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 220));
+    _menuCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 220),
+    );
     _fade = CurvedAnimation(parent: _menuCtrl, curve: Curves.easeOut);
   }
 
@@ -76,15 +77,18 @@ class _InitialPageState extends State<InitialPage>
                     const SizedBox(height: 24),
 
                     // Próxima reunião
-                    Text('Próxima reunião,',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      'Próxima reunião,',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     _Card(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 18,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
@@ -110,11 +114,12 @@ class _InitialPageState extends State<InitialPage>
                     const SizedBox(height: 28),
 
                     // Acesso rápido
-                    Text('Acesso rápido,',
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w600)),
+                    Text(
+                      'Acesso rápido,',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(height: 18),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -141,16 +146,21 @@ class _InitialPageState extends State<InitialPage>
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => const HistoricoReunioesPage()),
-                              );
-                            },
+                              MaterialPageRoute(
+                                builder: (_) => const HistoricoReunioesPage(),
+                              ),
+                            );
+                          },
                         ),
                         QuickAction(
                           icon: Icons.help_outline,
                           label: 'Ajuda',
                           onTap: () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const HelpPage()));
+                              MaterialPageRoute(
+                                builder: (_) => const HelpPage(),
+                              ),
+                            );
                           },
                         ),
                       ],
@@ -186,9 +196,7 @@ class _InitialPageState extends State<InitialPage>
                           const SizedBox(height: 14),
                           Text(
                             'Resumo de informações do dia.',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
+                            style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w700),
                           ),
                           const SizedBox(height: 8),
@@ -202,11 +210,11 @@ class _InitialPageState extends State<InitialPage>
                           const SizedBox(height: 14),
                           Opacity(
                             opacity: .9,
-                            child: Text('Reuniões',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.copyWith(letterSpacing: .2)),
+                            child: Text(
+                              'Reuniões',
+                              style: Theme.of(context).textTheme.labelLarge
+                                  ?.copyWith(letterSpacing: .2),
+                            ),
                           ),
                           const SizedBox(height: 8),
                           const _Bullet('Reunião com João às 17h.'),
@@ -219,27 +227,31 @@ class _InitialPageState extends State<InitialPage>
 
                     // Agendamento com IA
                     _Card(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 22),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 22,
+                      ),
                       child: Row(
                         children: [
                           Expanded(
                             child: Text(
                               'Agendamento inteligente com IA.',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium
+                              style: Theme.of(context).textTheme.titleMedium
                                   ?.copyWith(fontWeight: FontWeight.w700),
                             ),
                           ),
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              border:
-                                  Border.all(color: Colors.white.withOpacity(.14)),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(.14),
+                              ),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Icon(Icons.chat_bubble_outline, size: 22),
+                            child: const Icon(
+                              Icons.chat_bubble_outline,
+                              size: 22,
+                            ),
                           ),
                         ],
                       ),
@@ -343,7 +355,8 @@ class _AccountMenu extends StatefulWidget {
   State<_AccountMenu> createState() => _AccountMenuState();
 }
 
-class _AccountMenuState extends State<_AccountMenu> with TickerProviderStateMixin {
+class _AccountMenuState extends State<_AccountMenu>
+    with TickerProviderStateMixin {
   bool _showNotifications = false;
 
   // Lista de notificações (mock). Substitua pelos seus dados quando tiver backend/estado.
@@ -367,7 +380,7 @@ class _AccountMenuState extends State<_AccountMenu> with TickerProviderStateMixi
             color: Colors.black.withOpacity(.45),
             blurRadius: 18,
             offset: const Offset(0, 10),
-          )
+          ),
         ],
       ),
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 16),
@@ -382,8 +395,13 @@ class _AccountMenuState extends State<_AccountMenu> with TickerProviderStateMixi
               backgroundColor: Colors.transparent,
               child: Icon(Icons.emoji_people, color: Colors.white),
             ),
-            title: Text('Olá, João',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+            title: Text(
+              'Olá, João',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             trailing: Icon(Icons.expand_less, color: Colors.white70),
           ),
 
@@ -431,12 +449,17 @@ class _AccountMenuState extends State<_AccountMenu> with TickerProviderStateMixi
                               });
                             },
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
                             child: const Text(
                               'Excluir notificações',
-                              style: TextStyle(color: Colors.white70, fontSize: 12),
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
@@ -686,12 +709,18 @@ class _BottomPill extends StatelessWidget {
                 onTap: () {}, // não faz nada
                 activeColor: cs.primary,
               ),
-              _PillItem(icon: Icons.search, onTap: () {}),
               _PillItem(
-                  icon: Icons.message_outlined,
-                  onTap: () {
-                    Navigator.pushNamed(context, '/calendar');
-                  }),
+                icon: Icons.message_outlined,
+                onTap: () {
+                  Navigator.pushNamed(context, '/chats');
+                },
+              ),
+              _PillItem(
+                icon: Icons.calendar_month,
+                onTap: () {
+                  Navigator.pushNamed(context, '/calendar');
+                },
+              ),
             ],
           ),
         ),
